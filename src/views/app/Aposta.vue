@@ -1,6 +1,6 @@
 <template>
     <v-layout justify-space-between wrap>
-        <v-flex xs12 sm12 md8 :style="{ 'background-color': jogosSelecionados.length === 4 ? '#182635' : 'black' }">
+        <v-flex xs12 sm12 md8 style="background-color: #182635">
             <v-flex xs12>
                 <v-layout justify-center wrap>
                     <v-flex xs10 v-for="(jogo, indexc) in jogosSelecionados" :key="indexc">
@@ -17,7 +17,7 @@
                     <v-layout xs12 class="white--text" wrap justify-space-around>
                         <v-flex xs2 align-self-center>
                             <h4>Jogos</h4>
-                            <h2>0</h2>
+                            <h2>{{ jogosSelecionados.length }}</h2>
                         </v-flex>
                         <v-flex xs2 align-self-center>
                             <h4>
@@ -197,7 +197,15 @@ export default {
     }),
     methods: {
         adicionarJogo (jogo) {
-            this.jogosSelecionados.push(jogo)
+            if (this.jogosSelecionados.length < 6) this.jogosSelecionados.push(jogo)
+            else this.ativarAlerta('error', 'Número máximo de jogos antingido!')
+        },
+        ativarAlerta (tipo, texto) {
+            this.$store.dispatch('ativarAlerta', {
+                ativo: true,
+                texto: texto,
+                tipo: tipo
+            })
         }
     }
 }
