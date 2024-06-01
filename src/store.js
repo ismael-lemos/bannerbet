@@ -29,6 +29,12 @@ export default new Vuex.Store({
   getters: {
     alerta (state) {
       return state.alerta
+    },
+    tela_width () {
+      return Number(window.innerWidth)
+    },
+    tela_height () {
+      return Number(window.innerHeight)
     }
   }
 })

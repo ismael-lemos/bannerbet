@@ -1,8 +1,11 @@
 <template>
-    <v-layout justify-space-between wrap>
-        <v-flex xs12 sm12 md8 style="background-color: #182635">
-            <v-flex xs12>
-                <v-layout justify-center wrap>
+    <v-layout justify-space-between wrap style="height: 100%; background-color: #182635;">
+        <v-flex xs12 sm12 md8>
+            <v-flex
+                xs12
+                style="display: flex; align-items: inherit; flex-direction: column;"
+            >
+                <v-layout justify-center wrap :style="{ 'height': tela_height - 134 + 'px', 'overflow': 'scroll' }">
                     <v-flex xs10 v-for="(jogo, indexc) in jogosSelecionados" :key="indexc">
                         <card-jogo-ods
                             :timeCasa="jogo.time_casa"
@@ -13,46 +16,57 @@
                         />
                     </v-flex>
                 </v-layout>
-                <v-footer :color="jogosSelecionados.length === 4 ? '#101923' : 'black'" app>
-                    <v-layout xs12 class="white--text" wrap justify-space-around>
-                        <v-flex xs2 align-self-center>
-                            <h4>Jogos</h4>
-                            <h2>{{ jogosSelecionados.length }}</h2>
-                        </v-flex>
-                        <v-flex xs2 align-self-center>
-                            <h4>
-                                Banca
-                            </h4>
-                            <v-icon size="40" class="white--text">hide_image</v-icon>
-                        </v-flex>
-                        <v-flex xs2 align-self-center>
-                            <v-btn class="mr-4">Opções</v-btn>
-                            <v-btn color="info">Prosseguir</v-btn>
-                        </v-flex>
-                    </v-layout>
-                </v-footer>
+                <v-layout
+                    class="white--text"
+                    wrap
+                    justify-space-around
+                    :color="jogosSelecionados.length === 4 ? '#101923' : 'black'"
+                >
+                    <v-flex xs2 align-self-center>
+                        <h4>Jogos</h4>
+                        <h2>{{ jogosSelecionados.length }}</h2>
+                    </v-flex>
+                    <v-flex xs2 align-self-center>
+                        <h4>
+                            Banca
+                        </h4>
+                        <v-icon size="40" class="white--text">hide_image</v-icon>
+                    </v-flex>
+                    <v-flex xs4 align-self-center>
+                        <v-btn class="mr-4" small>Opções</v-btn>
+                        <v-btn color="info" small>Prosseguir</v-btn>
+                    </v-flex>
+                </v-layout>
             </v-flex>
         </v-flex>
-        <v-flex xs12 sm12 md4 style="background-color: #4e03a3;">
-            <v-navigation-drawer permanent width="100%" style="background-color: #4e03a3;">
-                <v-flex v-for="(campeonato, index) in campeonatos" :key="index">
-                    <h2 class="white--text ml-2">
-                        {{ campeonato.pais || '' }}:
-                        {{ campeonato.nome || '' }}
-                    </h2>
-                    <v-flex v-for="(jogo, indexb) in campeonato.jogos" :key="indexb">
-                        <v-spacer></v-spacer>
-                        <card-jogo
-                            :timeCasa="jogo.time_casa"
-                            :timeFora="jogo.time_fora"
-                            :ods="jogo.ods"
-                            :horario="jogo.horario"
-                            @adicionarJogo="adicionarJogo(jogo)"
-                        />
-                        <v-spacer></v-spacer>
-                    </v-flex>
+        <v-flex
+            v-if="adicionar || !($vuetify.breakpoint.xs || $vuetify.breakpoint.sm)"
+            xs12
+            sm12
+            md4
+            :style="{
+                'background-color': '#4e03a3',
+                'overflow': 'scroll',
+                'height': tela_height - 64 + 'px'
+              }"
+        >
+            <v-flex v-for="(campeonato, index) in campeonatos" :key="index">
+                <h2 class="white--text ml-2">
+                    {{ campeonato.pais || '' }}:
+                    {{ campeonato.nome || '' }}
+                </h2>
+                <v-flex v-for="(jogo, indexb) in campeonato.jogos" :key="indexb">
+                    <v-spacer></v-spacer>
+                    <card-jogo
+                        :timeCasa="jogo.time_casa"
+                        :timeFora="jogo.time_fora"
+                        :ods="jogo.ods"
+                        :horario="jogo.horario"
+                        @adicionarJogo="adicionarJogo(jogo, indexb)"
+                    />
+                    <v-spacer></v-spacer>
                 </v-flex>
-              </v-navigation-drawer>
+            </v-flex>
         </v-flex>
     </v-layout>
 </template>
@@ -67,6 +81,7 @@ export default {
         CardJogoOds
     },
     data: () => ({
+        adicionar: false,
         jogosSelecionados: [],
         campeonatos: [
             {
@@ -200,12 +215,24 @@ export default {
             if (this.jogosSelecionados.length < 6) this.jogosSelecionados.push(jogo)
             else this.ativarAlerta('error', 'Número máximo de jogos antingido!')
         },
+        removerDaRede (index) {
+            if (this.jogosSelecionados.length < 1) {
+                this.ativarAlerta('error', 'Todos os jogos da lista foram removidos')
+                return
+            }
+            this.jogosSelecionados.splice(index, 1)
+        },
         ativarAlerta (tipo, texto) {
             this.$store.dispatch('ativarAlerta', {
                 ativo: true,
                 texto: texto,
                 tipo: tipo
             })
+        }
+    },
+    computed: {
+        tela_height () {
+            return this.$store.getters.tela_height
         }
     }
 }
