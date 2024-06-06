@@ -63,20 +63,23 @@
                 <v-card-actions class="justify-space-around">
                     <v-flex xs3>
                         <v-text-field
-                            v-model="ods_fields.vitoria"
+                            v-model.lazy="ods_fields.vitoria"
                             filled
+                            v-money="money"
                         />
                     </v-flex>
                     <v-flex xs3>
                         <v-text-field
-                            v-model="ods_fields.empate"
+                            v-model.lazy="ods_fields.empate"
                             filled
+                            v-money="money"
                         />
                     </v-flex>
                     <v-flex xs3>
                         <v-text-field
-                            v-model="ods_fields.derrota"
+                            v-model.lazy="ods_fields.derrota"
                             filled
+                            v-money="money"
                         />
                     </v-flex>
                 </v-card-actions>
@@ -86,28 +89,34 @@
 </template>
 
 <script>
+import { VMoney } from 'v-money'
 export default {
     props: ['timeCasa', 'timeFora', 'ods', 'jogo'],
+    directives: { money: VMoney },
     data: () => ({
+        money: {
+            decimal: '.',
+            thousands: ',',
+            prefix: '',
+            precision: 2,
+            masked: false
+        },
         ods_fields: {}
     }),
     beforeMount () {
         this.ods_fields = {
             ...this.ods
-            // vitoria: this.ods.vitoria.toFixed(2),
-            // empate: this.ods.empate.toFixed(2),
-            // derrota: this.ods.derrota.toFixed(2)
         }
     },
     watch: {
         'ods_fields.vitoria' (val) {
-            this.$emit('editaOdVitoria', val, this.jogo)
+            this.$emit('editaOdVitoria', Number(val), this.jogo)
         },
         'ods_fields.empate' (val) {
-            this.$emit('editaOdEmpate', val, this.jogo)
+            this.$emit('editaOdEmpate', Number(val), this.jogo)
         },
         'ods_fields.derrota' (val) {
-            this.$emit('editaOdDerrota', val, this.jogo)
+            this.$emit('editaOdDerrota', Number(val), this.jogo)
         }
     }
 }

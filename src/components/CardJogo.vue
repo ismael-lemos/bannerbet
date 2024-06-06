@@ -54,13 +54,13 @@
                 </v-layout>
             </v-card-text>
             <v-card-actions style="background-color: lightgray;">
-                <v-flex xs1>
+                <v-flex xs1 v-if="ods.vitoria">
                     <h6>{{ ods.vitoria.toFixed(2) }}</h6>
                 </v-flex>
-                <v-flex xs1>
+                <v-flex xs1 v-if="ods.empate">
                     <h6>{{ ods.empate.toFixed(2) }}</h6>
                 </v-flex>
-                <v-flex xs1>
+                <v-flex xs1 v-if="ods.derrota">
                     <h6>{{ ods.derrota.toFixed(2) }}</h6>
                 </v-flex>
                 <v-spacer></v-spacer>

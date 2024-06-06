@@ -18,9 +18,6 @@ export default {
             else if (this.$vuetify.breakpoint.lg) return '13.5em'
             else  return '18.5em'
         }
-    },
-    watch: {
-        widthImagem (val) {console.log(val)}
     }
 }
 </script>

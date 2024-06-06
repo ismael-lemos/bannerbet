@@ -34,18 +34,48 @@
                     :color="jogosSelecionados.length === 4 ? '#101923' : 'black'"
                 >
                     <v-flex xs2 align-self-center>
-                        <h4>Jogos</h4>
-                        <h2>{{ jogosSelecionados.length }}</h2>
+                        <h4 class="text-center">Jogos</h4>
+                        <h2 class="text-center">{{ jogosSelecionados.length }}</h2>
                     </v-flex>
                     <v-flex xs2 align-self-center>
                         <h4>
                             Banca
                         </h4>
-                        <v-icon size="40" class="white--text">hide_image</v-icon>
+                        <v-icon size="30" class="white--text">hide_image</v-icon>
                     </v-flex>
                     <v-flex xs4 align-self-center>
-                        <v-btn class="mr-4" small>Opções</v-btn>
-                        <v-btn color="info" small>Prosseguir</v-btn>
+                        <v-menu offset-y>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    small
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    class="mr-4"
+                                >
+                                    Opções
+                                    <v-icon>arrow_drop_down</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item @click="dialogEscolherBanca = true">
+                                    <v-list-item-content>
+                                        Escolher Banca
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-content @click="dialogEscolherBanca = true">
+                                        Escolher Múltiplas Bancas
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                        <v-btn
+                            color="info"
+                            small
+                        >
+                            Prosseguir
+                            <i class="material-icons">arrow_forward</i>
+                        </v-btn>
                     </v-flex>
                 </v-layout>
             </v-flex>
@@ -120,21 +150,30 @@
                 </v-flex>
             </v-flex>
         </v-flex>
+        <v-dialog v-model="dialogEscolherBanca" fullscreen>
+            <dialog-selecionar-banca
+                @fechar="dialogEscolherBanca = false"
+            />
+        </v-dialog>
     </v-layout>
 </template>
 
 <script>
 import CardJogo from '@/components/CardJogo.vue'
 import CardJogoOds from '@/components/CardJogoOds.vue'
+import DialogSelecionarBanca from '@/components/DialogSelecionarBanca'
+
 export default {
     name: 'UserAposta',
     components: {
         CardJogo,
-        CardJogoOds
+        CardJogoOds,
+        DialogSelecionarBanca
     },
     data: () => ({
         adicionar: false,
         recarregarJogos: false,
+        dialogEscolherBanca: false,
         jogosSelecionados: [],
         campeonatos: [
             {
@@ -278,9 +317,8 @@ export default {
         adicionarJogo (jogo) {
             if (this.jogosSelecionados.length >= 6) this.ativarAlerta('error', 'Número máximo de jogos antingido!')
             const existe = this.jogoEstaLista(jogo.id)
-            console.log(existe)
             if (!existe) {
-                this.jogosSelecionados.push(jogo)
+                this.jogosSelecionados.push(Object.assign({}, jogo))
             }
         },
         removerJogo (index) {
@@ -307,16 +345,12 @@ export default {
             this.recarregarJogos = false
         },
         editaOdVitoria (novaOd, jogo) {
-            console.log(novaOd)
-            console.log(jogo)
             jogo.ods.vitoria = novaOd
         },
         editaOdEmpate (novaOd, jogo) {
-            console.log(novaOd)
             jogo.ods.empate = novaOd
         },
         editaOdDerrota (novaOd, jogo) {
-            console.log(novaOd)
             jogo.ods.derrota = novaOd
         },
         ativarAlerta (tipo, texto) {

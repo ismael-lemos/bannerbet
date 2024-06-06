@@ -1,4 +1,4 @@
-# BannerBet
+# new_project
 
 ## Project setup
 ```
