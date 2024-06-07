@@ -20,31 +20,12 @@
             <v-flex xs12 sm12 md10>
                 <v-layout wrap justify-start>
                     <v-flex xs12 sm6 md4 lg3 xl2 v-for="(banca, index) in bancas" :key="index">
-                        <v-card class="justify-center mb-4" dark style="width: 70%;">
-                            <v-layout justify-center style="width: 100%;">
-                                <img
-                                    :src="banca.logo"
-                                    alt="Imagem"
-                                    style="width: 20em;"
-                                >
-                            </v-layout>
-                            <v-card-text>
-                                <h4><b>Nome:</b> {{ banca.nome }}</h4>
-                                <h4><b>Link do site:</b> {{ banca.link_site }}</h4>
-                                <h4><b>Intagram:</b> {{ banca.instagram }}</h4>
-                                <h4><b>Cor:</b> {{ banca.cor }}</h4>
-                            </v-card-text>
-                            <v-card-actions class="justify-center">
-                                <v-btn
-                                    outlined
-                                    class="mb-3"
-                                    dark
-                                    @click="bancaSelecionada = banca, dialogCadastro = true"
-                                >
-                                    Alterar Dados
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                        <card-banca
+                            :banca="banca"
+                            @editarBanca="editarBanca"
+                            @selecionarBanca="selecionarBanca(banca)"
+                            :estaNaLista="bandaEstaLista(banca)"
+                        />
                     </v-flex>
                 </v-layout>
             </v-flex>
@@ -72,13 +53,18 @@
 
 <script>
 import DialogCadastrarBanca from '@/components/DialogCadastrarBanca.vue'
+import CardBanca from '@/components/CardBanca.vue'
+
 export default {
     components: {
-        DialogCadastrarBanca
+        DialogCadastrarBanca,
+        CardBanca
     },
+    props: ['escolherMultiplas'],
     data: () => ({
         bancas: [
             {
+                id: 1,
                 nome: 'Teste',
                 link_site: 'www.sportbetgol.club',
                 instagram: '@sportbetgol.club',
@@ -88,7 +74,30 @@ export default {
         ],
         dialogCadastro: false,
         bancaSelecionada: undefined,
-    })
+        bancasSelecionadas: [],
+    }),
+    methods: {
+        editarBanca (banca) {
+            this.bancaSelecionada = banca
+            this.dialogCadastro = true
+        },
+        bandaEstaLista (banca) {
+            return !!this.bancasSelecionadas.find((b) => b.id === banca.id)
+        },
+        selecionarBanca (banca) {
+            const existe = this.bandaEstaLista(banca)
+            if (existe) {
+                return
+            }
+            this.bancasSelecionadas.push(banca)
+            console.log(this.escolherMultiplas)
+            if (!this.escolherMultiplas) {
+                console.log('Entrou')
+                this.$emit('selecionarBanca', this.bancasSelecionadas)
+            }
+            console.log(this.bancasSelecionadas)
+        }
+    }
 }
 </script>
 

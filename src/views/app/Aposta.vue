@@ -39,9 +39,18 @@
                     </v-flex>
                     <v-flex xs2 align-self-center>
                         <h4>
-                            Banca
+                            Banca{{ bancasSelecionadas.length === 0 ? 's' : '' }}
                         </h4>
-                        <v-icon size="30" class="white--text">hide_image</v-icon>
+                        <v-icon v-if="bancasSelecionadas.length === 0" size="30" class="white--text">hide_image</v-icon>
+                        <v-layout>
+                            <img
+                                v-for="(banda, index) in bancasSelecionadas"
+                                :src="banda.logo"
+                                alt="logo da banca"
+                                :key="index"
+                                style="width: 2.5em;"
+                            >
+                        </v-layout>
                     </v-flex>
                     <v-flex xs4 align-self-center>
                         <v-menu offset-y>
@@ -57,13 +66,13 @@
                                 </v-btn>
                             </template>
                             <v-list>
-                                <v-list-item @click="dialogEscolherBanca = true">
+                                <v-list-item @click="escolherMultiplas = false, dialogEscolherBanca = true">
                                     <v-list-item-content>
                                         Escolher Banca
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-list-item>
-                                    <v-list-item-content @click="dialogEscolherBanca = true">
+                                    <v-list-item-content @click="escolherMultiplas = true, dialogEscolherBanca = true">
                                         Escolher Múltiplas Bancas
                                     </v-list-item-content>
                                 </v-list-item>
@@ -150,9 +159,18 @@
                 </v-flex>
             </v-flex>
         </v-flex>
-        <v-dialog v-model="dialogEscolherBanca" fullscreen>
+        <v-dialog
+            v-model="dialogEscolherBanca"
+            fullscreen
+            @keydown.esc="
+                dialogEscolherBanca = false,
+                escolherMultiplas = false
+            "
+        >
             <dialog-selecionar-banca
-                @fechar="dialogEscolherBanca = false"
+                @fechar="dialogEscolherBanca = false, escolherMultiplas = false"
+                :escolherMultiplas="escolherMultiplas"
+                @selecionarBanca="selecionarBanca"
             />
         </v-dialog>
     </v-layout>
@@ -172,9 +190,11 @@ export default {
     },
     data: () => ({
         adicionar: false,
+        escolherMultiplas: false,
         recarregarJogos: false,
         dialogEscolherBanca: false,
         jogosSelecionados: [],
+        bancasSelecionadas: [],
         campeonatos: [
             {
                 pais: 'Canada',
@@ -367,6 +387,10 @@ export default {
         },
         jogoEstaLista (id) {
             return !!this.jogosSelecionados.find((j) => j.id === id)
+        },
+        selecionarBanca (bancas) {
+            this.bancasSelecionadas = bancas
+            this.dialogEscolherBanca = false
         }
     },
     computed: {
