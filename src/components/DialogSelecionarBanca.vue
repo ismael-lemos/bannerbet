@@ -25,6 +25,7 @@
                             @editarBanca="editarBanca"
                             @selecionarBanca="selecionarBanca(banca)"
                             :estaNaLista="bandaEstaLista(banca)"
+                            @removerSelecao="removerSelecao(index)"
                         />
                     </v-flex>
                 </v-layout>
@@ -62,20 +63,15 @@ export default {
     },
     props: ['escolherMultiplas'],
     data: () => ({
-        bancas: [
-            {
-                id: 1,
-                nome: 'Teste',
-                link_site: 'www.sportbetgol.club',
-                instagram: '@sportbetgol.club',
-                cor: 'Laranja',
-                logo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/logo/c601c6a120f0e430621174764780601c6a120f0e7.png'
-            }
-        ],
         dialogCadastro: false,
         bancaSelecionada: undefined,
         bancasSelecionadas: [],
     }),
+    computed: {
+        bancas () {
+            return this.$store.getters.bancas
+        }
+    },
     methods: {
         editarBanca (banca) {
             this.bancaSelecionada = banca
@@ -90,12 +86,13 @@ export default {
                 return
             }
             this.bancasSelecionadas.push(banca)
-            console.log(this.escolherMultiplas)
+            this.$emit('selecionarBanca', this.bancasSelecionadas)
             if (!this.escolherMultiplas) {
-                console.log('Entrou')
-                this.$emit('selecionarBanca', this.bancasSelecionadas)
+                this.$emit('fechar')
             }
-            console.log(this.bancasSelecionadas)
+        },
+        removerSelecao (index) {
+            this.bancasSelecionadas.splice(index, 1)
         }
     }
 }

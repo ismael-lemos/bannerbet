@@ -18,7 +18,6 @@
                                 v-bind="attrs"
                                 v-on="on"
                                 @click="$refs.logoInput.click()"
-                                style="border-radius: 10em;"
                             >
                                 <v-card-text
                                     style="
@@ -40,12 +39,29 @@
                     </template>
                     <span>Clique para inserir uma imagem</span>
                 </v-tooltip>
-                <img
+                <v-hover
                     v-else-if="imagem && mostrar"
-                    :src="imagem"
-                    alt="Logo da banca"
-                    style="width: 15em;"
+                    v-slot="{ hover }"
+                    open-delay="200"
                 >
+                    <v-img
+                        :src="imagem"
+                        alt="Logo da banca"
+                        @click="$refs.logoInput.click()"
+                        height="15em"
+                        max-width="15em"
+                    >
+                    <v-expand-transition>
+                        <div
+                            v-if="hover"
+                            class="d-flex transition-fast-in-fast-out info darken-2 v-card--reveal text-h5 white--text text-center"
+                            style="height: 100%;"
+                        >
+                            Clique para adicionar um nova imagem
+                        </div>
+                        </v-expand-transition>
+                    </v-img>
+                </v-hover>
                 <v-flex xs12 v-show="croppingLogo">
                     <vue-croppie
                         ref="croppieRef"
@@ -55,8 +71,8 @@
                         :enableOrientation="false"
                         :mouseWheelZoom="true"
                         :showZoomer="false"
-                        :boundary="{ width: 250, height: 250 }"
-                        :viewport="{ width: 200, height: 200, type : 'circle' }"
+                        :boundary="{ width: 240, height: 240 }"
+                        :viewport="{ width: 200, height: 200 }"
                     ></vue-croppie>
                 </v-flex>
                 <v-btn
@@ -94,11 +110,6 @@
                 placeholder="@meuinstagram"
                 v-model="nova_banca.instagram"
             ></v-text-field>
-            <v-text-field
-                 v-if="!banca"
-                label="Escolher logo"
-                type="file"
-            ></v-text-field>
             <v-select
                 outlined
                 :items="[
@@ -119,6 +130,7 @@
                 color="info"
                 block
                 large
+                @click="cadastrarBanca"
             >
                 {{ 
                     banca ? 'Atualizar' : 'Cadastrar'
@@ -170,12 +182,21 @@ export default {
                 format: 'png'
             }
             this.mostrar = true
-            options.circle = true
+            options.circle = false
             this.$refs.croppieRef.result(options, output => {
                 this.imagem = output
                 this.croppingLogo = false
             })
         },
+        cadastrarBanca () {
+            this.$store.dispatch( this.banca ? 'editarBanca' : 'cadastrarBanca',
+                {
+                    ...this.nova_banca,
+                    logo: this.imagem
+                }
+            )
+            this.$emit('fechar')
+        }
     }
 }
 </script>

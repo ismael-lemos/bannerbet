@@ -14,14 +14,14 @@
             }"
             :elevation="hover ? 10 : 4"
         >
-            <v-layout justify-center style="width: 100%;" @click="$emit('selecionarBanca')">
+            <v-layout justify-center style="width: 100%;" @click="estaNaLista ? $emit('removerSelecao') : $emit('selecionarBanca')">
                 <img
                     :src="banca.logo"
                     alt="Imagem"
                     style="width: 20em;"
                 >
             </v-layout>
-            <v-card-text @click="$emit('selecionarBanca')">
+            <v-card-text @click="estaNaLista ? $emit('removerSelecao') : $emit('selecionarBanca')">
                 <h4><b>Nome:</b> {{ banca.nome }}</h4>
                 <h4><b>Link do site:</b> {{ banca.link_site }}</h4>
                 <h4><b>Intagram:</b> {{ banca.instagram }}</h4>

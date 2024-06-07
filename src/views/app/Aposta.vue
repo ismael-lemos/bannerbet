@@ -390,13 +390,15 @@ export default {
         },
         selecionarBanca (bancas) {
             this.bancasSelecionadas = bancas
-            this.dialogEscolherBanca = false
         }
     },
     computed: {
         tela_height () {
             return this.$store.getters.tela_height
         }
+    },
+    beforeMount () {
+        this.date = new Date().toISOString().substr(0, 10)
     },
     watch: {
         date (val) {
