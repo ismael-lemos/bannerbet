@@ -4,6 +4,9 @@ import Home from './views/app/Home.vue'
 import Login from './views/app/Login.vue'
 import CadastrarUsuario from './views/app/CadastrarUsuario.vue'
 import Aposta from './views/app/Aposta.vue'
+import MinhaConta from './views/app/MinhaConta.vue'
+import Contato from './views/app/Contato.vue'
+import Pagamento from './views/app/Pagamento.vue'
 // import { createRouter, createWebHistory } from 'vue-router'
 
 
@@ -29,6 +32,21 @@ const routes = [
     path: '/aposta',
     name: 'UserAposta',
     component: Aposta,
+  },
+  {
+    path: '/minhaconta',
+    name: 'MinhaConta',
+    component: MinhaConta,
+  },
+  {
+    path: '/contato',
+    name: 'ContatoBannerBet',
+    component: Contato,
+  },
+  {
+    path: '/pagamento',
+    name: 'UsuarioPagamento',
+    component: Pagamento,
   }
 ];
 

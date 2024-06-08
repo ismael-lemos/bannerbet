@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import VueCroppie from 'vue-croppie';
 import 'croppie/croppie.css'
+import { VueMaskDirective } from 'v-mask'
 
 Vue.config.productionTip = false
 Vue.use(VueCroppie)
@@ -16,3 +17,5 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+
+Vue.directive('mask', VueMaskDirective)

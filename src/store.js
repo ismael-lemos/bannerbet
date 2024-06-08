@@ -6,7 +6,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loading: false,
-    usuario: undefined,
+    usuario: {
+      id: 3981,
+      nome_completo: 'Ismael Lemos',
+      nome_usuario: 'Ismael',
+      email: 'ismael.lemos.1997@gmail',
+      numero_telefone: '84988798975',
+      cpf: '12373456709',
+      data_cadastro: '2024-06-07'
+    },
+    plano: {
+      nome: 'Gratuito',
+      valor: 0,
+      acesso_videos: false
+    },
     alerta: {
       tipo: 'error',
       texto: 'Número máximo de jogos antingido!',
@@ -26,6 +39,9 @@ export default new Vuex.Store({
   mutations: {
     setUsuario (state, payload) {
       state.usuario = payload
+    },
+    setPlano (state, payload) {
+      state.plano = payload
     },
     setAlerta (state, payload) {
       state.alerta = payload
@@ -47,35 +63,58 @@ export default new Vuex.Store({
       }, 5000)
     },
     cadastrarBanca ({ commit, state }, payload) {
-      commit('setLoading', true)
-      state.bancas.push(payload)
-      commit('setLoading', false)
+      return new Promise((resolve, reject) => {
+        if (!reject) {
+          reject(Error('Não foi possível encerrar a sessão'))
+        }
+        commit('setLoading', true)
+        state.bancas.push(payload)
+        commit('setLoading', false)
+        resolve('OK')
+      })
     },
     editarBanca ({ commit, state }, payload) {
-      commit('setLoading', true)
-      const banca = state.bancas.find((b) => b.id == payload.id)
-      const existe = !!banca
-      if (existe) {
-        this.dispatch('ativarAlerta',
-          {
-            tipo: 'error',
-            texto: 'Banca não existe',
-            ativo: true
-          }
-        )
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        const banca = state.bancas.find((b) => b.id == payload.id)
+        const existe = !!banca
+        if (existe) {
+          this.dispatch('ativarAlerta',
+            {
+              tipo: 'error',
+              texto: 'Banca não existe',
+              ativo: true
+            }
+          )
+          commit('setLoading', false)
+          reject(Error('Banca não existe'))
+        }
+        banca.nome = payload.nome
+        banca.instagram = payload.instagram
+        banca.logo = payload.logo
+        banca.link_site = payload.link_site
         commit('setLoading', false)
-        return
-      }
-      banca.nome = payload.nome
-      banca.instagram = payload.instagram
-      banca.logo = payload.logo
-      banca.link_site = payload.link_site
-      commit('setLoading', false)
+        resolve('OK')
+      })
+    },
+    encerrarSessao ({ commit }) {
+      return new Promise((resolve, reject) => {
+        if (!reject) {
+          reject(Error('Não foi possível encerrar a sessão'))
+        }
+        commit('setLoading', true)
+        commit('setUsuario', undefined)
+        commit('setLoading', false)
+        resolve('OK')
+      })
     }
   },
   getters: {
     usuario (state) {
       return state.usuario
+    },
+    plano (state) {
+      return state.plano
     },
     alerta (state) {
       return state.alerta
