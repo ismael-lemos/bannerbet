@@ -1,222 +1,282 @@
 <template>
-  <v-container>
-    <v-row class="text-center mb-4" color="black">
-      <v-carousel height="25em" show-arrows-on-hover>
-        <v-carousel-item
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-          cover
-        ></v-carousel-item>
-
-        <v-carousel-item
-          src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-          cover
-        ></v-carousel-item>
-
-        <v-carousel-item
-          src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-          cover
-        ></v-carousel-item>
-      </v-carousel>
-    </v-row>
-    <v-card elevation="4" class="mt-4" color="#182635">
-      <template v-for="(itemMenu, index) in card_menu">
-        <v-card-title style="background-color: #101923;" :key="`${index}title`">
-          <h2># {{ itemMenu.titulo }}</h2>
-        </v-card-title>
-        <v-card-text :key="`${index}card-text`">
-          <template v-if="itemMenu.itens">
-            <v-layout
-              wrap
-              :justify-space-between="$vuetify.breakpoint.xl || $vuetify.breakpoint.lg"
-              :justify-center="$vuetify.breakpoint.xs"
-            >
-              <v-flex xs12 sm6 md4 lg2 xl2 v-for="(card, indexb) in itemMenu.itens" :key="`${indexb}flex`" class="mb-4">
-                <card-menu
-                  @push="$router.push(card.caminho)"
-                  :imagem="card.imagem"
-                  :titulo="card.titulo"
-                />
-              </v-flex>
-            </v-layout>
-          </template>
-        </v-card-text>
+  <v-container
+    fluid
+    fill-height
+    class="pa-0"
+    style="overflow-y: auto; overflow-x: hidden"
+  >
+  <app-bar
+    @ativarMenu="drawer = !drawer"
+  ></app-bar>
+  <v-main app style="height: 100%">
+    <v-navigation-drawer
+      absolute
+      fixed
+      v-model="drawer"
+      width="40vh"
+      color="#101923"
+    >
+      <v-list-item title="My Application" subtitle="Vuetify"></v-list-item>
+      <v-divider></v-divider>
+      <template v-for="(m, index) in menu">
+        <h4 class="primary--text ml-4" :key="`${index}h4`">
+          {{ m.titulo  }}
+        </h4>
+        <v-list-item
+          v-for="(item, indexM) in m.itens" :key="`${index}list-item${indexM}`"
+          link
+          @click="$router.push(item.rota)"
+          :disabled="item.rota === $route.path"
+          class="mt-2 mb-2"
+          :style="
+            item.rota === $route.path ? {
+              'background-color': '#070B0F',
+              'opacity': 0.5
+            } : {}
+          "
+        >
+          <v-list-item-icon>
+            <img v-if="item.imagem" :src="item.imagem" alt="imagem" style="width: 1.5em;">
+            <v-icon v-else-if="item.icone" color="white">{{ item.icone }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="white--text">
+            {{ item.nome }}
+          </v-list-item-title>
+        </v-list-item>
       </template>
-    </v-card>
-    <v-row>
-      <v-col cols="12" class="ma-0" color="#182635">
-      </v-col>
-    </v-row>
-    <v-footer absolute color="black">
-      © Copyright 2024 Bannercotação - Todos os direitos reservados
-  
-        <a>Termos de uso</a> | <a>Privacidade Parcerias</a> <a>Sobre</a>
-    </v-footer>
+      <v-list-item link title="List Item 2"></v-list-item>
+      <v-list-item link title="List Item 3"></v-list-item>
+    </v-navigation-drawer>
+    <router-view></router-view>
+  </v-main>
   </v-container>
 </template>
 
 <script>
-import CardMenu from '@/components/CardMenu.vue';
+import AppBar from '@/components/AppBar.vue'
   export default {
     name: 'HelloWorld',
-    components: { CardMenu },
+    components: { AppBar },
     data: () => ({
-      card_menu: [
+      drawer: false,
+      menu: [
         {
-          titulo: 'Alguns dos nossos modelos',
-          itens: undefined
-        },
-        {
-          titulo: 'Os queridinhos de futebol',
+          titulo: 'Comece sua jornada',
           itens: [
             {
-              titulo: 'Sa oc9 4 Jogos',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b643812ec770b91116332772197643812ec770bc.jpeg',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'Sa oc9 6 Jogos',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b643812ec770b91116332772197643812ec770bc.jpeg',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'Sa oc9 2 Jogos',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b643812ec770b91116332772197643812ec770bc.jpeg',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'Sa cm9 4 Jogos',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/d643812c3c619f3028737591179643812c3c61a1.jpeg',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'Sa cm9 6 Jogos',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/d643812c3c619f3028737591179643812c3c61a1.jpeg',
-              caminho: '/aposta'
+              nome: 'Início',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/presentation_icon.png',
+              rota: '/'
             }
           ]
         },
         {
-          titulo: 'As últimas publicações',
+          titulo: 'Banners Prontos',
           itens: [
             {
-              titulo: 'Bola de ouro',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a664e307a1009c29892028873517664e307a100a0.png',
-              caminho: '/aposta'
+              nome: 'Futebol pronto',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/ready_soccer_icon.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Corpus Christi',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b665743069e7a991493493474665743069e7ac.png',
-              caminho: '/aposta'
+              nome: 'Palpite pronto',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/ready_tips_icon.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Campeão',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/e664c04d49931e820156722986664c04d499323.png',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'BRASILEIRÃO',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/e6656259106bce737453027596656259106bd2.png',
-              caminho: '/aposta'
-            },
-            {
-              titulo: 'Campeão',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a664c04422d5f74051334494845664c04422d5fa.png',
-              caminho: '/aposta'
+              nome: 'Basquete pronto',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/ready_basketball_icon.png',
+              rota: '/aposta'
             }
           ]
         },
         {
-          titulo: 'Bilhetes preferidos da galera',
+          titulo: 'Banners comuns',
           itens: [
             {
-              titulo: 'Bilhete Premiado - 2 Bilhetes CL 2',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/d6287a44791440143312672629096287a44791444.jpeg',
-              caminho: '/aposta'
+              nome: 'Futebol',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_soccer.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Bilhete Premiado - 2 Bilhetes CL 2',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a6287a3efd3d43159311796299686287a3efd3d47.jpeg',
-              caminho: '/aposta'
+              nome: 'Basquete',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_nba.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Bilhete Premiado - 2 Bilhetes CL 2',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a6287a4ab4c19b92612698721106287a4ab4c19f.jpeg',
-              caminho: '/aposta'
+              nome: 'Luta',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_fight.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Modelo Exclusivo 208 Bilhete 2',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/c635404c334b071940595616456635404c334b0a.jpeg',
-              caminho: '/aposta'
+              nome: 'Acumuladão',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_accumulated.png',
+              rota: '/aposta'
             },
             {
-              titulo: '2BilhBreno',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a64675ef8a70f81187564943064675ef8a70fb.jpeg',
-              caminho: '/aposta'
+              nome: 'Palpites',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_tips.png',
+              rota: '/aposta'
+            },
+            {
+              nome: 'Vôlei',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_volley.png',
+              rota: '/aposta'
+            },
+            {
+              nome: 'Conversão',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_cta.png',
+              rota: '/aposta'
+            },
+            {
+              nome: 'Roleta',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_roulette.png',
+              rota: '/aposta'
             }
           ]
         },
         {
-          titulo: 'Os mais famosos de cassino',
+          titulo: 'Mais',
           itens: [
             {
-              titulo: '[BC] Ganesha Fortune',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b664b5de30eaab31315099820664b5de30eaaf.png',
-              caminho: '/aposta'
+              nome: 'Publicações',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_publications.png',
+              rota: '/aposta'
             },
             {
-              titulo: '[BC] Qual desse é o seu favorito ?',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/c664b5a1eb78fe845560197476664b5a1eb7903.png',
-              caminho: '/aposta'
+              nome: 'Bilhete',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_ticket.png',
+              rota: '/aposta'
             },
             {
-              titulo: '[BC] Bingo Goal',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a6633bf1fb45fd16012939835516633bf1fb4602.png',
-              caminho: '/aposta'
+              nome: 'Artes especiais',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_special.png',
+              rota: '/aposta'
             },
             {
-              titulo: '[BC] Balloon',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/a6633b9189205e39882503528546633b91892062.png',
-              caminho: '/aposta'
+              nome: 'Notícias de esporte',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_sport_news.png',
+              rota: '/aposta'
             },
             {
-              titulo: '[BC] Tigrinho',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/d662921cf65d6b601473921369662921cf65d6f.png',
-              caminho: '/aposta'
+              nome: 'Odds Turbinadas',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_turbo_odd.png',
+              rota: '/aposta'
+            },
+            {
+              nome: 'Figurinhas',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_sticker.png',
+              rota: '/aposta'
+            },
+            {
+              nome: 'Cassino',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_roulette_casino.png',
+              rota: '/aposta'
             }
           ]
         },
         {
-          titulo: 'Top modelos especiais',
+          titulo: 'Vídeos',
           itens: [
             {
-              titulo: 'Dia de GREEN!',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b664bdd9345f00451480040811664bdd9345f04.png',
-              caminho: '/aposta'
+              nome: 'Futebol',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_video.png',
+              rota: '/aposta'
+            }
+          ]
+        },
+        {
+          titulo: 'Não editáveis',
+          itens: [
+            {
+              nome: 'Diários',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_video.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Afiliados!',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b664bdd078b19e892152084867664bdd078b1a1.png',
-              caminho: '/aposta'
+              nome: 'Especiais',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_video.png',
+              rota: '/aposta'
             },
             {
-              titulo: 'Afiliados!',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/e664bdcd0401f58581379060755664bdcd0401f9.png',
-              caminho: '/aposta'
+              nome: 'Personalizáveis',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_video.png',
+              rota: '/aposta'
+            }
+          ]
+        },
+        {
+          titulo: 'Plataforma',
+          itens: [
+            {
+              nome: 'Minha conta',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_myaccount.png',
+              rota: '/minhaconta'
             },
             {
-              titulo: '(Semanou)!',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/d664bdce3cc58c5911634056144664bdce3cc590.png',
-              caminho: '/aposta'
+              nome: 'Pagamento',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_cash.png',
+              rota: '/pagamento'
             },
             {
-              titulo: 'Saque e deposite via pix!',
-              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/covers/b662aec4a7cd410954011909662aec4a7cd44.png',
-              caminho: '/aposta'
+              nome: 'Novidades',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_news.png',
+              rota: '/novidades'
+            },
+            {
+              nome: 'Suporte',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_support.png',
+              rota: '/suporte'
+            },
+            {
+              nome: 'Contato',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_contact.png',
+              rota: '/contato'
+            },
+            {
+              nome: 'Central de atualizações APPS',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/app_update_center_icon.png',
+              rota: '/minhaconta'
+            },
+            {
+              nome: 'Central de ajuda',
+              icone: 'home',
+              imagem: 'https://bannercotacao.s3.us-east-2.amazonaws.com/app/bc/icons/icon_help_center.png',
+              rota: '/central-de-ajuda'
             }
           ]
         }
       ]
-    }),
+    })
   }
 </script>
 
