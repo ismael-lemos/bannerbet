@@ -8,7 +8,7 @@
                 <v-layout
                     justify-center
                     wrap
-                    :style="{ 'height': tela_height - 134 + 'px', 'overflow': 'scroll' }"
+                    :style="{ 'height': tela_height - 145 + 'px', 'overflow': 'scroll' }"
                     v-if="!recarregarJogos"
                 >
                     <v-flex xs10 v-for="(jogo, indexc) in jogosSelecionados" :key="indexc">
@@ -97,7 +97,7 @@
             :style="{
                 'background-color': '#182635',
                 'overflow': 'scroll',
-                'height': tela_height - 64 + 'px'
+                'height': tela_height - 80 + 'px'
               }"
         >
             <v-flex
@@ -195,139 +195,6 @@ export default {
         dialogEscolherBanca: false,
         jogosSelecionados: [],
         bancasSelecionadas: [],
-        campeonatos: [
-            {
-                pais: 'Canada',
-                nome: 'Championship',
-                jogos: [
-                    {
-                        id: 1,
-                        time_casa: {
-                            nome: 'Pacific FC',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60ddc6bf1781074145924017660ddc6bf17814.png'
-                        },
-                        time_fora: {
-                            nome: 'Atl. Ottowa',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/d60de8434a51043237156340317760de8434a510b.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    },
-                    {
-                        id: 2,
-                        time_casa: {
-                            nome: 'Pacific FC',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60ddc6bf1781074145924017660ddc6bf17814.png'
-                        },
-                        time_fora: {
-                            nome: 'Atl. Ottowa',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/d60de8434a51043237156340317760de8434a510b.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    },
-                    {
-                        id: 3,
-                        time_casa: {
-                            nome: 'Pacific FC',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60ddc6bf1781074145924017660ddc6bf17814.png'
-                        },
-                        time_fora: {
-                            nome: 'Atl. Ottowa',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/d60de8434a51043237156340317760de8434a510b.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    }
-                ]
-            },
-            {
-                pais: 'EUA',
-                nome: 'MLS',
-                jogos: [
-                    {
-                        id: 4,
-                        time_casa: {
-                            nome: 'Los Angeles Galaxy',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/a60955c6a6dfa2100486565468660955c6a6dfa5.png'
-                        },
-                        time_fora: {
-                            nome: 'FC Dallas',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60955c56f2ca1191950884819960955c56f2ca6.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    },
-                    {
-                        id: 5,
-                        time_casa: {
-                            nome: 'Los Angeles Galaxy',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/a60955c6a6dfa2100486565468660955c6a6dfa5.png'
-                        },
-                        time_fora: {
-                            nome: 'FC Dallas',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60955c56f2ca1191950884819960955c56f2ca6.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    },
-                    {
-                        id: 6,
-                        time_casa: {
-                            nome: 'Los Angeles Galaxy',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/a60955c6a6dfa2100486565468660955c6a6dfa5.png'
-                        },
-                        time_fora: {
-                            nome: 'FC Dallas',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60955c56f2ca1191950884819960955c56f2ca6.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    },
-                    {
-                        id: 7,
-                        time_casa: {
-                            nome: 'Los Angeles Galaxy',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/a60955c6a6dfa2100486565468660955c6a6dfa5.png'
-                        },
-                        time_fora: {
-                            nome: 'FC Dallas',
-                            url_esculo: 'https://bannercotacao.s3.us-east-2.amazonaws.com/client/banner/type/generic/team/shield/compressed/c60955c56f2ca1191950884819960955c56f2ca6.png'
-                        },
-                        ods: {
-                            vitoria: 1.54,
-                            empate: 1.46,
-                            derrota: 2.50
-                        },
-                        horario: '23:30'
-                    }
-                ]
-            }
-        ],
         date: null,
         today: Date.parse(new Date().toISOString().substr(0, 10)),
         menu: false,
@@ -395,6 +262,9 @@ export default {
     computed: {
         tela_height () {
             return this.$store.getters.tela_height
+        },
+        campeonatos () {
+            return this.$store.getters.campeonatos
         }
     },
     beforeMount () {

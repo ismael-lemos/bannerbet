@@ -7,9 +7,19 @@ import store from './store'
 import VueCroppie from 'vue-croppie';
 import 'croppie/croppie.css'
 import { VueMaskDirective } from 'v-mask'
+import VueCurrencyFilter from 'vue-currency-filter'
 
 Vue.config.productionTip = false
 Vue.use(VueCroppie)
+Vue.use(VueCurrencyFilter,
+{
+  symbol: 'R$',
+  thousandsSeparator: '.',
+  fractionCount: 2,
+  fractionSeparator: ',',
+  symbolPosition: 'front',
+  symbolSpacing: true
+})
 
 new Vue({
   router,
