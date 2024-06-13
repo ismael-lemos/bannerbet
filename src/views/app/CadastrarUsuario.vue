@@ -1,7 +1,14 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
+  <v-container style="height: 100%;">
+    <v-row class="text-center" style="height: 100%;">
+      <v-col cols="12"
+        style="
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          height: 100%;
+        "
+      >
         <!-- <v-card v-if="plano">
           <v-card-title>
             <h2>Realizar Cadastro</h2>
@@ -36,7 +43,7 @@
         </v-card> -->
         <v-card
           color="#182635"
-          height="100%"
+          style="width: 100%;"
         >
           <v-layout
             wrap
@@ -150,38 +157,51 @@
                     position: absolute;
                     left: 0em;
                   "
-                  @click="confirmarSelecao(undefined)"
+                  v-if="!$vuetify.breakpoint.xs && !$vuetify.breakpoint.sm"
+                  @click="confirmarSelecao(undefined), planoSelecionado = undefined"
                 >
                   <v-icon>arrow_back</v-icon>
                 </v-btn>
                 <h2 class="mt-4">Cadastra-se com plano {{ plano.nome }}</h2>
               </v-flex>
-              <v-container class="ma-4">
+              <v-container class="ma-4 text-start">
+                <label class="ml-4 mr-4">
+                  Nome de Usuário:
+                </label>
                 <v-text-field
-                  class="mt-4 ml-4 mr-4"
+                  v-model="usuario_data.nome_usuario"
+                  class="ml-4 mr-4"
                   label="Nome de Usuário"
                   outlined
                   solo
                 ></v-text-field>
+                <label class="ml-4 mr-4">E-mail:</label>
                 <v-text-field
+                  v-model="usuario_data.email"
                   class="ml-4 mr-4"
                   label="E-mail"
                   outlined
                   solo
                 ></v-text-field>
+                <label class="ml-4 mr-4">Telefone:</label>
                 <v-text-field
+                  v-model="usuario_data.numero_telefone"
                   class="ml-4 mr-4"
                   label="Telefone"
                   outlined
                   solo
                 ></v-text-field>
+                <label class="ml-4 mr-4">Senha:</label>
                 <v-text-field
+                  v-model="usuario_data.senha"
                   class="ml-4 mr-4"
                   label="Senha"
                   outlined
                   solo
                 ></v-text-field>
+                <label class="ml-4 mr-4">Repetir Senha:</label>
                 <v-text-field
+                  v-model="usuario_data.senha_repetida"
                   class="ml-4 mr-4"
                   label="Repetir Senha"
                   solo
@@ -190,6 +210,15 @@
               <p>
                 Concordo com os <a>termos de uso</a> e a <a>política de privacidade</a> da bannercotação.
               </p>
+              <v-btn
+                  block
+                  v-if="$vuetify.breakpoint.xs || $vuetify.breakpoint.sm"
+                  @click="confirmarSelecao(undefined), planoSelecionado = undefined"
+                  class="mb-3"
+                >
+                  <v-icon class="mr-1">arrow_back</v-icon>
+                  Voltar
+                </v-btn>
               <v-btn
                   block
                 >
@@ -208,7 +237,16 @@
     name: 'UserLogin',
 
     data: () => ({
-      planoSelecionado: undefined
+      planoSelecionado: undefined,
+      usuario_data: {
+        id: 3981,
+        nome_completo: 'Ismael Lemos',
+        nome_usuario: 'Ismael',
+        email: 'ismael.lemos.1997@gmail',
+        numero_telefone: '84988798975',
+        cpf: '12373456709',
+        data_cadastro: '2024-06-07'
+      }
     }),
     computed: {
       planos () {
