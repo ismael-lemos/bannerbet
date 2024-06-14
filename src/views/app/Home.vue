@@ -9,6 +9,18 @@
     @ativarMenu="drawer = !drawer"
   ></app-bar>
   <v-main app style="height: 100%">
+    <v-alert
+      dark
+      v-show="alerta.ativo"
+      :type="alerta.tipo"
+      style="
+        width: 100%;
+        position: absolute;
+      "
+      :value="true"
+    >
+      <h4>{{alerta.texto}}</h4>
+    </v-alert>
     <v-navigation-drawer
       absolute
       fixed
@@ -276,7 +288,12 @@ import AppBar from '@/components/AppBar.vue'
           ]
         }
       ]
-    })
+    }),
+    computed: {
+      alerta () {
+        return this.$store.getters.alerta
+      }
+    }
   }
 </script>
 

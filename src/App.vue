@@ -10,11 +10,6 @@ export default {
   props: {
     source: String
   },
-  data: () => ({}),
-  computed: {
-    alerta () {
-      return this.$store.getters.alerta
-    }
-  }
+  data: () => ({})
 };
 </script>

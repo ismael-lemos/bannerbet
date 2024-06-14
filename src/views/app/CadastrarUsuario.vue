@@ -9,38 +9,6 @@
           height: 100%;
         "
       >
-        <!-- <v-card v-if="plano">
-          <v-card-title>
-            <h2>Realizar Cadastro</h2>
-          </v-card-title>
-          <v-card-text>
-            <v-text-field
-              label="Nome de Usuário"
-              outlined
-            ></v-text-field>
-            <v-text-field
-              label="E-mail"
-              outlined
-            ></v-text-field>
-            <v-text-field
-              label="Telefone"
-              outlined
-            ></v-text-field>
-            <v-text-field
-              label="Senha"
-              outlined
-            ></v-text-field>
-            <v-text-field
-              label="Repetir Senha"
-              outlined
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn block color="success">
-              Criar Conta
-            </v-btn>
-          </v-card-actions>
-        </v-card> -->
         <v-card
           color="#182635"
           style="width: 100%;"
@@ -165,50 +133,79 @@
                 <h2 class="mt-4">Cadastra-se com plano {{ plano.nome }}</h2>
               </v-flex>
               <v-container class="ma-4 text-start">
-                <label class="ml-4 mr-4">
-                  Nome de Usuário:
-                </label>
-                <v-text-field
-                  v-model="usuario_data.nome_usuario"
-                  class="ml-4 mr-4"
-                  label="Nome de Usuário"
-                  outlined
-                  solo
-                ></v-text-field>
-                <label class="ml-4 mr-4">E-mail:</label>
-                <v-text-field
-                  v-model="usuario_data.email"
-                  class="ml-4 mr-4"
-                  label="E-mail"
-                  outlined
-                  solo
-                ></v-text-field>
-                <label class="ml-4 mr-4">Telefone:</label>
-                <v-text-field
-                  v-model="usuario_data.numero_telefone"
-                  class="ml-4 mr-4"
-                  label="Telefone"
-                  outlined
-                  solo
-                ></v-text-field>
-                <label class="ml-4 mr-4">Senha:</label>
-                <v-text-field
-                  v-model="usuario_data.senha"
-                  class="ml-4 mr-4"
-                  label="Senha"
-                  outlined
-                  solo
-                ></v-text-field>
-                <label class="ml-4 mr-4">Repetir Senha:</label>
-                <v-text-field
-                  v-model="usuario_data.senha_repetida"
-                  class="ml-4 mr-4"
-                  label="Repetir Senha"
-                  solo
-                ></v-text-field>
+                <v-form lazy-validation v-model="valido" ref="formulario">
+                  <label class="ml-4 mr-4">
+                    Nome de Usuário:
+                  </label>
+                  <v-text-field
+                    v-model="usuario_data.nome_usuario"
+                    class="ml-4 mr-4"
+                    label="Nome de Usuário"
+                    solo
+                    @input="usuario_data.nome_usuario = usuario_data.nome_usuario.toLowerCase().replaceAll(' ', '').trim()"
+                    :rules="[
+                      v => !!v || 'Esse campo é obrigatório',
+                      v => {
+                        const usernamePattern = /^[a-z0-9]+$/;
+                        return usernamePattern.test(v) || 'Nome de usuário inválido'
+                      }
+                    ]"
+                  ></v-text-field>
+                  <label class="ml-4 mr-4">E-mail:</label>
+                  <v-text-field
+                    v-model="usuario_data.email"
+                    class="ml-4 mr-4"
+                    label="E-mail"
+                    solo
+                    @input="usuario_data.email = usuario_data.email.toLowerCase().replaceAll(' ', '').trim()"
+                    :rules="[
+                      v => !!v || 'Esse campo é obrigatório',
+                      v => {
+                        const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+                        return pattern.test(v) || 'E-mail inválido.'
+                      }
+                    ]"
+                  ></v-text-field>
+                  <label class="ml-4 mr-4">Telefone:</label>
+                  <v-text-field
+                    v-model.lazy="usuario_data.numero_telefone"
+                    class="ml-4 mr-4"
+                    label="Telefone"
+                    solo
+                    v-mask="'(##) # ####-####'"
+                    :rules="[v => !!v || 'Esse campo é obrigatório']"
+                  ></v-text-field>
+                  <label class="ml-4 mr-4">Senha:</label>
+                  <v-text-field
+                    v-model="usuario_data.senha"
+                    class="ml-4 mr-4"
+                    label="Senha"
+                    solo
+                    :type="mostrarSenha ? 'text' : 'password'"
+                    :append-icon="mostrarSenha ? 'visibility' : 'visibility_off'"
+                    required
+                    :rules="[v => !!v || 'Insira sua senha!']"
+                    @click:append="mostrarSenha = !mostrarSenha"
+                  ></v-text-field>
+                  <label class="ml-4 mr-4">Repetir Senha:</label>
+                  <v-text-field
+                    v-model="usuario_data.senha_repetida"
+                    class="ml-4 mr-4"
+                    label="Repetir Senha"
+                    solo
+                    :type="mostrarSenha2 ? 'text' : 'password'"
+                    :append-icon="mostrarSenha2 ? 'visibility' : 'visibility_off'"
+                    required
+                    @click:append="mostrarSenha2 = !mostrarSenha2"
+                    :rules="[
+                      v => !!v || 'Insira novamente sua senha!',
+                      v => v === usuario_data.senha || 'A senha digitada está diferente',
+                    ]"
+                  ></v-text-field>
+                </v-form>
               </v-container>
               <p>
-                Concordo com os <a>termos de uso</a> e a <a>política de privacidade</a> da bannercotação.
+                Concordo com os <dialog-termos-uso/> e a <dialog-politica-privacidade/> da bannercotação.
               </p>
               <v-btn
                   block
@@ -220,8 +217,9 @@
                   Voltar
                 </v-btn>
               <v-btn
-                  block
-                >
+                block
+                @click="realizarCadastro"
+              >
                   Criar Conta
                 </v-btn>
             </v-flex>
@@ -233,19 +231,27 @@
 </template>
 
 <script>
+import DialogTermosUso from '@/components/DialogTermosUso.vue'
+import DialogPoliticaPrivacidade from '@/components/DialogPoliticaPrivacidade.vue'
+
   export default {
     name: 'UserLogin',
-
+    components: { DialogTermosUso, DialogPoliticaPrivacidade },
     data: () => ({
       planoSelecionado: undefined,
+      mostrarSenha: false,
+      mostrarSenha2: false,
+      valido: false,
       usuario_data: {
         id: 3981,
-        nome_completo: 'Ismael Lemos',
-        nome_usuario: 'Ismael',
-        email: 'ismael.lemos.1997@gmail',
-        numero_telefone: '84988798975',
-        cpf: '12373456709',
-        data_cadastro: '2024-06-07'
+        nome_completo: undefined,
+        nome_usuario: undefined,
+        email: undefined,
+        numero_telefone: undefined,
+        cpf: undefined,
+        data_cadastro: undefined,
+        senha: undefined,
+        repeticao_senha: undefined,
       }
     }),
     computed: {
@@ -259,6 +265,19 @@
     methods: {
       confirmarSelecao (plano) {
         this.$store.dispatch('selecionarPlano', plano)
+      },
+      realizarCadastro () {
+        if (this.$refs.formulario.validate()) {
+          this.$store.dispatch('iniciarSessao', this.usuario_data).then(() => {
+            this.$router.push('/')
+          })
+        } else {
+          this.$store.dispatch('ativarAlerta', {
+            tipo: 'error',
+            ativo: true,
+            texto: 'O formulário de cadastro precisa ser completamente preenchido'
+          })
+        }
       }
     }
   }
